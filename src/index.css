@@ -1,0 +1,40 @@
+body {
+	background-image: url('photo.avif');
+	/* background-color: #000; */
+	height: 100vh;
+	width: 100vw;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: #fff;
+	font-size: 2rem;
+	display: grid;
+	grid-template-rows: 100px auto 100px;
+}
+
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	/* width: 100%; */
+}
+#prayer {
+	/* background-color: #fff; */
+	width: 50%;
+}
+header button {
+	width: 25%;
+}
+main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+#scripture {
+	width: 30%;
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+}
