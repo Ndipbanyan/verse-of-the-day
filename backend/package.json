@@ -1,0 +1,18 @@
+{
+	"name": "verse-of-the-day-scrapper",
+	"version": "1.0.0",
+	"description": "",
+	"main": "app.js",
+	"scripts": {
+		"start": "nodemon app.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^0.27.2",
+		"cheerio": "^1.0.0-rc.12",
+		"express": "^4.18.1",
+		"nodemon": "^2.0.19"
+	}
+}
