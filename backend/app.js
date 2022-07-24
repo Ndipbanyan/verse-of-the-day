@@ -3,13 +3,13 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const express = require('express')
 const app = express()
-// const cors = require('cors')
-// app.use(cors())
+const cors = require('cors')
+app.use(cors())
 
 const url = 'https://www.bible.com/verse-of-the-day'
 
 app.get('/', function (req, res) {
-	res.json('This is my webscraper')
+	res.json('Verse of the day scrapper')
 })
 
 app.get('/results', (req, res) => {
@@ -23,6 +23,7 @@ app.get('/results', (req, res) => {
 				const title = $(this).text()
 				articles.push(title)
 			})
+
 			res.json(articles[0])
 		})
 		.catch((err) => console.log(err))
