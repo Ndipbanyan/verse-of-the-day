@@ -3,20 +3,14 @@
 	"name": "verse of the day",
 	"version": "1.0.0",
 	"description": "A verse a day keeps the devil at bay.",
-	"icons": {
-		"16": "icons/16.png",
-		"32": "icons/32.png",
-		"48": "icons/48.png",
-		"64": "icons/64.png",
-		"128": "icons/128.png"
-	},
+	"icons": {},
 	"chrome_url_overrides": {
 		"newtab": "index.html"
 	},
 
 	"permissions": ["storage", "unlimitedStorage"],
 	"background": {
-		"scripts": ["src/js/background.js"],
+		"scripts": ["/src/js/background.js"],
 		"persistent": false
 	},
 	"minimum_chrome_version": "60"
