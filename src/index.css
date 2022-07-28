@@ -3,6 +3,7 @@
 }
 body {
 	height: 100vh;
+	width: 100vw;
 	background-color: #111;
 	background-size: cover;
 	background-position: 50%;
@@ -11,6 +12,15 @@ body {
 	font-size: 2rem;
 	display: grid;
 	grid-template-rows: 100px auto 100px;
+	font-family: 'Merriweather Sans', sans-serif;
+}
+.container {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.35);
 }
 
 header {

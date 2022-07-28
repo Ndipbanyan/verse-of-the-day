@@ -5,33 +5,40 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="spirit life productivity" content="A chrome extension for daily verse of the day" />
 		<link rel="stylesheet" type="text/css" href="src/index.css" />
-		<link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet" />
-		<title>Spirit Life Productivity</title>
-		<script type="text/javascript" src="https//cdn.jsdelivr.net/npm/contrast-js@0.0.3/contrast.min.js"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;700&display=swap"
+			rel="stylesheet"
+		/>
+		<title>Your Verse of The Day</title>
 	</head>
-	<body class="contrast-bg">
-		<header>
-			<p>Hi Ryan!</p>
+	<body>
+		<div class="container">
+			<header>
+				<p>Hi Ryan!</p>
 
-			<!-- <p>Prayer</p> -->
-			<button>Donate</button>
-		</header>
-		<main>
-			<p id="prayer">Prayer-Dear Lord Jesus, help me follow and yieldto your will. In Jesus Name, Amen.</p>
-			<p class="scripture-text">But thanks be to God! He gives us the victory through our Lord Jesus Christ.</p>
-			<div id="scripture">
-				<p id="verse" class="contrast-el">loading...</p>
-				<div id="versions">
-					<select name="versions" id="">
-						<option value="KJV">KJV</option>
-						<option value="NIV">NIV</option>
-						<option value="ESV">ESV</option>
-						<option value="AMPC">AMPC</option>
-					</select>
+				<!-- <p>Prayer</p> -->
+				<button>Donate</button>
+			</header>
+			<main>
+				<p id="prayer">Prayer-Dear Lord Jesus, help me follow and yieldto your will. In Jesus Name, Amen.</p>
+				<p class="scripture-text">But thanks be to God! He gives us the victory through our Lord Jesus Christ.</p>
+				<div id="scripture">
+					<p id="verse" class="contrast-el">loading...</p>
+					<div id="versions">
+						<select name="versions" id="">
+							<option value="KJV">KJV</option>
+							<option value="NIV">NIV</option>
+							<option value="ESV">ESV</option>
+							<option value="AMPC">AMPC</option>
+						</select>
+					</div>
 				</div>
-			</div>
-		</main>
-		<footer></footer>
+			</main>
+			<footer></footer>
+		</div>
+
 		<script src="/src/js/index.js"></script>
 	</body>
 </html>
