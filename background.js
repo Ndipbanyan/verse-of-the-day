@@ -1,4 +1,4 @@
-const UNSPLASH_ACCESS_KEY = ''
+const UNSPLASH_ACCESS_KEY = 'S5ymCxyR7NyWdRbzRMF4YgxmMvIMU4TBHdkgtjLYCTs'
 
 function validateResponse(response) {
 	if (!response.ok) {
