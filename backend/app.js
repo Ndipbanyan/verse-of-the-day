@@ -1,18 +1,19 @@
 const PORT = 8000
-const axios = require('axios')
-const cheerio = require('cheerio')
-const express = require('express')
+import axios from 'axios'
+import cheerio from 'cheerio'
+import express from 'express'
 const app = express()
-const cors = require('cors')
+import cors from 'cors'
 app.use(cors())
 
 const url = 'https://www.bible.com/verse-of-the-day'
+let rawVerse
 
 app.get('/', function (req, res) {
 	res.json('Verse of the day scrapper')
 })
 
-app.get('/results', (req, res) => {
+app.get('/results', (_req, res) => {
 	axios(url)
 		.then((response) => {
 			const html = response.data
@@ -23,7 +24,7 @@ app.get('/results', (req, res) => {
 				const title = $(this).text()
 				articles.push(title)
 			})
-
+			rawVerse = articles[0]
 			res.json(articles[0])
 		})
 		.catch((err) => console.log(err))
