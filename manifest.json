@@ -3,11 +3,14 @@
 	"name": "verse of the day",
 	"version": "1.0.0",
 	"description": "A verse a day keeps the devil at bay.",
+	"action": {},
+
 	"icons": {
 		"16": "16.png",
 		"32": "32.png",
 		"192": "192.png"
 	},
+
 	"chrome_url_overrides": {
 		"newtab": "index.html"
 	},
