@@ -36,14 +36,12 @@ header {
 	/* filter: invert(100%); */
 }
 button {
-	background-color: #fff;
-	color: #39b0c0;
-	font-size: 20px;
-	font-weight: bold;
+	color: #fff;
+	font-size: 24px;
+	font-weight: 700;
 	border: none;
-	opacity: 0.5;
 	padding: 5px;
-	border-radius: 10px;
+	background: transparent;
 }
 main {
 	display: flex;

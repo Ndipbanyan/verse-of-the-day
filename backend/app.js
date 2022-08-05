@@ -1,4 +1,4 @@
-const PORT = 8000
+const PORT = 8080
 import { books } from './Books.mjs'
 import axios from 'axios'
 import cheerio from 'cheerio'
@@ -44,13 +44,14 @@ app.get('/verse', (_req, res) => {
 })
 app.get('/scripture-text', async (_req, res) => {
 	let shortenedVerse
-	let versions = []
+	let versions = {}
 	let baseUrl = 'https://bible.com/bible/'
 	let nivVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}111/${shortenedVerse}.NIV`)))
 	let nltVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}116/${shortenedVerse}.NLT`)))
 	let kjvVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}1/${shortenedVerse}.KJV`)))
 	let esvVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}59/${shortenedVerse}.ESV`)))
-	let ampVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}1588/${shortenedVerse}.AMP`)))
+	let ampVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}1588/MAT.9.37-38.AMP`)))
+	// let ampVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}1588/${shortenedVerse}.AMP`)))
 	try {
 		let response = await axios(url)
 		const html = response.data
@@ -59,6 +60,7 @@ app.get('/scripture-text', async (_req, res) => {
 
 		$('.usfm ', html).each(function () {
 			const title = $(this).text()
+
 			articles.push(title)
 		})
 
@@ -69,30 +71,28 @@ app.get('/scripture-text', async (_req, res) => {
 				result.forEach((response, index) => {
 					const html = response.data
 					const $ = cheerio.load(html)
-					let title
 
 					switch (index) {
 						case 0:
-							title = { KJV: $('.f3-m ', html).text() }
+							versions['KJV'] = $('.f3-m ', html).text()
 							break
 						case 1:
-							title = { NIV: $('.f3-m ', html).text() }
+							versions['NIV'] = $('.f3-m ', html).text()
 							break
 						case 2:
-							title = { ESV: $('.f3-m ', html).text() }
+							versions['ESV'] = $('.f3-m ', html).text()
 							break
 						case 3:
-							title = { NLT: $('.f3-m ', html).text() }
+							versions['NLT'] = $('.f3-m ', html).text()
 							break
-						case 3:
-							title = { AMP: $('.f3-m ', html).text() }
+						case 4:
+							versions['AMP'] = $('.f3-m ', html).text()
+
 							break
 
 						default:
 							break
 					}
-
-					versions.push(title)
 				})
 				res.json(versions)
 			})
