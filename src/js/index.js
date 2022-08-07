@@ -3,6 +3,7 @@ const verseElement = document.getElementById('verse')
 const versionElement = document.getElementById('versions')
 const prayerElement = document.getElementById('prayer')
 const scriptureTextElement = document.getElementById('scripture-text')
+const locationElement = document.getElementById('place-name')
 let versions
 let backgroundData
 let scriptureData
@@ -54,6 +55,7 @@ async function nextBackground() {
 			// The backgroundImage object is subsequently stored in
 			// the browser's local storage
 			document.body.setAttribute('style', `background-image: url(${backgroundImage.base64});`)
+			locationElement.textContent = backgroundImage.location.name
 			let timeNow = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
 			timeNow = timeNow.split(',')
 			timeNow = timeNow[0]
@@ -66,6 +68,18 @@ async function nextBackground() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+	chrome.storage.local.get(['isOnboardingDone'], (value) => {
+		if (value.isOnboardingDone) {
+			chrome.storage.local.get(['data'], (response) => {
+				const { data } = response
+				document.getElementById('username').innerHTML = `Hi ${data.username}`
+			})
+		} else {
+			chrome.tabs.create({
+				url: './onboarding.html',
+			})
+		}
+	})
 	const imageDataFromLS = localStorage.getItem('background')
 	const versesDataFromLS = localStorage.getItem('versions')
 
@@ -127,6 +141,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		scriptureTextElement.textContent = scriptureData.data[1].KJV
 		const { background } = backgroundData
 		document.body.setAttribute('style', `background-image: url(${background.base64});`)
+		locationElement.textContent = `${background.location.name}`
 		versions = scriptureData.data[1]
 	}
 

@@ -1,4 +1,4 @@
-const UNSPLASH_ACCESS_KEY = 'S5ymCxyR7NyWdRbzRMF4YgxmMvIMU4TBHdkgtjLYCTs'
+const UNSPLASH_ACCESS_KEY = ''
 
 const locationElement = document.getElementById('place-name')
 let error = document.getElementById('validate')
@@ -47,6 +47,7 @@ async function nextBackground() {
 			timeNow = timeNow.split(',')
 			timeNow = timeNow[0]
 			const storeData = { background: backgroundImage, timestamp: timeNow }
+
 			localStorage.setItem('background', JSON.stringify(storeData))
 		})
 	} catch (err) {
@@ -74,7 +75,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	if (backgroundData) {
 		const { background } = backgroundData
 		document.body.setAttribute('style', `background-image: url(${background.base64});`)
-		locationElement.textContent = `${background.location.name},${background.location.city}`
+		locationElement.textContent = `location: ${background.location.name},${background.location.city}`
 	}
 })
 let user_name
@@ -82,6 +83,7 @@ const emailInput = document.getElementById('email')
 const nameInput = document.getElementById('name')
 nameInput.addEventListener('keyup', function (e) {
 	if (e.key === 'Enter') {
+		e.preventDefault()
 		next('name', 'email')
 	}
 })
@@ -92,10 +94,10 @@ nameInput.addEventListener('change', function (e) {
 
 function next(from, to) {
 	error.innerHTML = ''
-	document.getElementById(from).children[2].focus()
+
 	let value = document.getElementById(from).children[2].value
 
-	if (!value || value === '') {
+	if (!value) {
 		error.innerHTML = 'Please enter a value'
 	} else {
 		error.innerHTML = ''
@@ -115,5 +117,10 @@ formElement.addEventListener('submit', function (e) {
 	}
 	const formData = new FormData(formElement)
 	const data = { username: formData.get('name'), email: formData.get('email') }
-	console.log(data)
+	if (data.username && data.email) {
+		chrome.storage.local.set({ data })
+		chrome.storage.local.set({ isOnboardingDone: true })
+		window.close()
+		window.open('index.html')
+	}
 })

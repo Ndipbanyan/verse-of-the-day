@@ -5,6 +5,14 @@
 	margin: 0;
 	color: #fff;
 }
+body {
+	height: 100vh;
+	width: 100vw;
+	background-color: #111;
+	background-size: cover;
+	background-position: 50%;
+	background-attachment: fixed;
+}
 .container {
 	height: 100vh;
 	width: 100vw;
@@ -89,7 +97,8 @@ section.is-visible {
 	flex-direction: column;
 }
 #validate {
-	color: #333;
+	color: #fff;
+	font-size: 2rem;
 	font-weight: 700;
 	margin-top: 1rem;
 }

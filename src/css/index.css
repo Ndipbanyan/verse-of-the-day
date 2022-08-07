@@ -1,5 +1,6 @@
 * {
 	font-family: 'Merriweather';
+	box-sizing: border-box;
 }
 body {
 	height: 100vh;
@@ -20,7 +21,7 @@ body {
 	right: 0;
 	left: 0;
 	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.35);
+	background-color: rgba(0, 0, 0, 0.2);
 }
 
 header {
