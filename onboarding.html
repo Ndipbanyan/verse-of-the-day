@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="Your verse of the Day" content="A chrome extension for daily verse of the day" />
+		<link rel="stylesheet" type="text/css" href="src/css/onboarding.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;700&display=swap"
+			rel="stylesheet"
+		/>
+		<title>Your Verse of The Day</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="main-content">
+				<form id="form">
+					<section id="name" class="is-visible">
+						<label class="label" for="name">Hello There! What's your name?</label><br />
+						<input type="text" name="name" />
+						<div class="nav-btn-div">Press <strong>Enter ↵</strong></div>
+					</section>
+					<section id="email">
+						<label class="label" id="email-label" for="email"> </label><br />
+						<input type="email" name="email" />
+
+						<button type="submit" class="submit-button" value="submit">Submit</button>
+					</section>
+				</form>
+				<p id="validate"></p>
+			</div>
+			<footer>
+				<p id="place-name">location</p>
+			</footer>
+		</div>
+
+		<script src="/src/js/onboarding.js" type="module"></script>
+	</body>
+</html>
