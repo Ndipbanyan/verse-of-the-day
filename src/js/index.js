@@ -80,6 +80,11 @@ window.addEventListener('DOMContentLoaded', () => {
 			})
 		}
 	})
+
+	chrome.runtime.sendMessage({ command: 'fetch-prayer' }, (response) => {
+		prayerElement.innerHTML = response.prayer ? response.prayer : 'Dear Abba, thank You'
+	})
+
 	const imageDataFromLS = localStorage.getItem('background')
 	const versesDataFromLS = localStorage.getItem('versions')
 

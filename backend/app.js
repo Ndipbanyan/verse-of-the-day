@@ -50,8 +50,7 @@ app.get('/scripture-text', async (_req, res) => {
 	let nltVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}116/${shortenedVerse}.NLT`)))
 	let kjvVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}1/${shortenedVerse}.KJV`)))
 	let esvVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}59/${shortenedVerse}.ESV`)))
-	let ampVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}1588/MAT.9.37-38.AMP`)))
-	// let ampVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}1588/${shortenedVerse}.AMP`)))
+	let ampVersion = () => new Promise((resolve) => resolve(axios(`${baseUrl}1588/${shortenedVerse}.AMP`)))
 	try {
 		let response = await axios(url)
 		const html = response.data

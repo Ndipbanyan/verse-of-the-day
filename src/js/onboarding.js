@@ -120,6 +120,7 @@ formElement.addEventListener('submit', function (e) {
 	if (data.username && data.email) {
 		chrome.storage.local.set({ data })
 		chrome.storage.local.set({ isOnboardingDone: true })
+		chrome.runtime.sendMessage({ command: 'save-user-details' })
 		window.close()
 		window.open('index.html')
 	}

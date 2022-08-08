@@ -14,7 +14,7 @@
 	"chrome_url_overrides": {
 		"newtab": "index.html"
 	},
-
+	"host_permissions": ["*://*/*"],
 	"permissions": ["storage", "unlimitedStorage", "tabs"],
 	"background": {
 		"service_worker": "background.js"
