@@ -1,4 +1,3 @@
-const UNSPLASH_ACCESS_KEY = ''
 const verseElement = document.getElementById('verse')
 const versionElement = document.getElementById('versions')
 const prayerElement = document.getElementById('prayer')
@@ -7,8 +6,9 @@ const locationElement = document.getElementById('place-name')
 let versions
 let backgroundData
 let scriptureData
-const verseUrl = 'http://localhost:8080/'
+const verseUrl = 'https://yvotd-backend.herokuapp.com/'
 const unsplashUrl = 'https://api.unsplash.com/photos/random?orientation=landscape&query=nature landscape'
+const backendUrl = 'https://yvotd-backend.herokuapp.com/keys'
 
 function validateResponse(response) {
 	if (!response.ok) {
@@ -21,7 +21,10 @@ function validateResponse(response) {
 async function getBackgroundImage() {
 	const headers = new Headers()
 
-	headers.append('Authorization', `Client-ID ${UNSPLASH_ACCESS_KEY}`)
+	const key = await fetch(backendUrl)
+	let keyjson = await validateResponse(key).json()
+
+	headers.append('Authorization', `Client-ID ${keyjson.unsplash}`)
 
 	let response = await fetch(unsplashUrl, { headers })
 
@@ -66,7 +69,6 @@ async function nextBackground() {
 		console.log(err)
 	}
 }
-
 window.addEventListener('DOMContentLoaded', () => {
 	chrome.storage.local.get(['isOnboardingDone'], (value) => {
 		if (value.isOnboardingDone) {
@@ -81,10 +83,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	})
 
-	chrome.runtime.sendMessage({ command: 'fetch-prayer' }, (response) => {
-		prayerElement.innerHTML = response.prayer ? response.prayer : 'Dear Abba, thank You'
-	})
-
 	const imageDataFromLS = localStorage.getItem('background')
 	const versesDataFromLS = localStorage.getItem('versions')
 
@@ -97,7 +95,13 @@ window.addEventListener('DOMContentLoaded', () => {
 		if (background.timestamp == today) {
 			backgroundData = background
 			scriptureData = scripture
+			chrome.storage.local.get(['prayer'], (response) => {
+				prayerElement.innerHTML = response.prayer
+			})
 		} else {
+			chrome.runtime.sendMessage({ command: 'fetch-prayer' }, (response) => {
+				prayerElement.innerHTML = response.prayer
+			})
 			nextBackground()
 			const fetchVerse = fetch(`${verseUrl}verse`).then((res) => res.json())
 			const fetchVersions = fetch(`${verseUrl}scripture-text`).then((res) => res.json())
@@ -120,6 +124,9 @@ window.addEventListener('DOMContentLoaded', () => {
 				})
 		}
 	} else {
+		chrome.runtime.sendMessage({ command: 'fetch-prayer' }, (response) => {
+			prayerElement.innerHTML = response.prayer ? response.prayer : 'Dear Abba, thank You'
+		})
 		nextBackground()
 		const fetchVerse = fetch(`${verseUrl}verse`).then((res) => res.json())
 		const fetchVersions = fetch(`${verseUrl}scripture-text`).then((res) => res.json())

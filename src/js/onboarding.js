@@ -1,61 +1,64 @@
-const UNSPLASH_ACCESS_KEY = ''
-
 const locationElement = document.getElementById('place-name')
 let error = document.getElementById('validate')
 
 let backgroundData
-
+const backendUrl = 'https://yvotd-backend.herokuapp.com/keys'
 const unsplashUrl = 'https://api.unsplash.com/photos/random?orientation=landscape&query=nature landscape'
 
-function validateResponse(response) {
-	if (!response.ok) {
-		throw Error(response.statusText)
-	}
-
-	return response
-}
-
-async function getBackgroundImage() {
-	const headers = new Headers()
-
-	headers.append('Authorization', `Client-ID ${UNSPLASH_ACCESS_KEY}`)
-
-	let response = await fetch(unsplashUrl, { headers })
-
-	const json = await validateResponse(response).json()
-	response = await fetch(json.urls.raw + '&q=85&w=2000')
-	json.blob = await validateResponse(response).blob()
-
-	return json
-}
-
-async function nextBackground() {
-	try {
-		const backgroundImage = await getBackgroundImage()
-
-		const fileReader = new FileReader()
-
-		fileReader.readAsDataURL(backgroundImage.blob)
-		fileReader.addEventListener('load', (event) => {
-			const { result } = event.target
-
-			backgroundImage.base64 = result
-
-			document.body.setAttribute('style', `background-image: url(${backgroundImage.base64});`)
-			locationElement.textContent = backgroundImage.location.name
-			let timeNow = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
-			timeNow = timeNow.split(',')
-			timeNow = timeNow[0]
-			const storeData = { background: backgroundImage, timestamp: timeNow }
-
-			localStorage.setItem('background', JSON.stringify(storeData))
-		})
-	} catch (err) {
-		console.log(err)
-	}
-}
+let UNSPLASH_ACCESS_KEY
 
 window.addEventListener('DOMContentLoaded', () => {
+	function validateResponse(response) {
+		if (!response.ok) {
+			throw Error(response.statusText)
+		}
+
+		return response
+	}
+
+	async function getBackgroundImage() {
+		const headers = new Headers()
+
+		const key = await fetch(backendUrl)
+		let keyjson = await validateResponse(key).json()
+
+		headers.append('Authorization', `Client-ID ${keyjson.unsplash}`)
+
+		let response = await fetch(unsplashUrl, { headers })
+
+		const json = await validateResponse(response).json()
+		response = await fetch(json.urls.raw + '&q=85&w=2000')
+		json.blob = await validateResponse(response).blob()
+
+		return json
+	}
+
+	async function nextBackground() {
+		try {
+			const backgroundImage = await getBackgroundImage()
+
+			const fileReader = new FileReader()
+
+			fileReader.readAsDataURL(backgroundImage.blob)
+			fileReader.addEventListener('load', (event) => {
+				const { result } = event.target
+
+				backgroundImage.base64 = result
+
+				document.body.setAttribute('style', `background-image: url(${backgroundImage.base64});`)
+				locationElement.textContent = backgroundImage.location.name
+				let timeNow = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
+				timeNow = timeNow.split(',')
+				timeNow = timeNow[0]
+				const storeData = { background: backgroundImage, timestamp: timeNow }
+
+				localStorage.setItem('background', JSON.stringify(storeData))
+			})
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	const imageDataFromLS = localStorage.getItem('background')
 
 	if (imageDataFromLS) {

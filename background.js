@@ -1,34 +1,49 @@
+const backendUrl = 'https://yvotd-backend.herokuapp.com/keys'
 const PRAYER_URL = 'https://rwqmkjnxmzvukmdfgtiw.supabase.co/rest/v1/Prayers?select=prayer'
 const USERS_URL = 'https://rwqmkjnxmzvukmdfgtiw.supabase.co/rest/v1/Users'
-const SUPABASE_KEY = chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
+
+chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
 	if (request.command === 'save-user-details') {
 		chrome.storage.local.get(['data'], (response) => {
 			const { data } = response
-			fetch(`${USERS_URL}`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					apiKey: SUPABASE_KEY,
-					Authorization: `Bearer ${SUPABASE_KEY}`,
-					Prefer: 'return=representation',
-				},
-				body: JSON.stringify(data),
-			})
-				.then((res) => res.json())
-				.then((res) => console.log(res))
+
+			fetch(backendUrl)
+				.then((response) => response.json())
+				.then((response) => {
+					fetch(`${USERS_URL}`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							apiKey: response.supabase,
+							Authorization: `Bearer ${response.supabase}`,
+							Prefer: 'return=representation',
+						},
+						body: JSON.stringify(data),
+					})
+						.then((res) => res.json())
+						.then(() => console.log('User saved!'))
+						.catch((err) => console.log(err))
+				})
 				.catch((err) => console.log(err))
 		})
 	}
 	if (request.command === 'fetch-prayer') {
-		fetch(`${PRAYER_URL}`, {
-			headers: {
-				apiKey: SUPABASE_KEY,
-				Authorization: `Bearer ${SUPABASE_KEY}`,
-			},
-		})
-			.then((res) => res.json())
-			.then((res) => sendResponse({ prayer: res[0].prayer }))
-
+		fetch(backendUrl)
+			.then((response) => response.json())
+			.then((response) => {
+				fetch(`${PRAYER_URL}`, {
+					headers: {
+						apiKey: response.supabase,
+						Authorization: `Bearer ${response.supabase}`,
+					},
+				})
+					.then((res) => res.json())
+					.then((res) => {
+						sendResponse({ prayer: res[0].prayer })
+						chrome.storage.local.set({ prayer: res[0].prayer })
+					})
+					.catch((err) => console.log(err))
+			})
 			.catch((err) => console.log(err))
 	}
 	return true

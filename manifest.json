@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "verse of the day",
 	"version": "1.0.0",
-	"description": "A verse a day keeps the devil at bay.",
+	"description": "This replaces a new tab on chrome with a verse of the day",
 	"action": {},
 
 	"icons": {
