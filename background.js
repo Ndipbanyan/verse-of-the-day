@@ -1,4 +1,4 @@
-const backendUrl = 'https://yvotd-backend.herokuapp.com/keys'
+const baseUrl = 'https://yvotd-backend.herokuapp.com'
 const PRAYER_URL = 'https://rwqmkjnxmzvukmdfgtiw.supabase.co/rest/v1/Prayers?select=prayer'
 const USERS_URL = 'https://rwqmkjnxmzvukmdfgtiw.supabase.co/rest/v1/Users'
 
@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
 		chrome.storage.local.get(['data'], (response) => {
 			const { data } = response
 
-			fetch(backendUrl)
+			fetch(`${baseUrl}/keys`)
 				.then((response) => response.json())
 				.then((response) => {
 					fetch(`${USERS_URL}`, {
@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
 		})
 	}
 	if (request.command === 'fetch-prayer') {
-		fetch(backendUrl)
+		fetch(`${baseUrl}/keys`)
 			.then((response) => response.json())
 			.then((response) => {
 				fetch(`${PRAYER_URL}`, {

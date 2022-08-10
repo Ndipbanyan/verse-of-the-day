@@ -3,38 +3,35 @@
 	box-sizing: border-box;
 }
 body {
-	height: 100vh;
-	width: 100vw;
+	padding: 0;
+	margin: 0;
 	background-color: #111;
 	background-size: cover;
 	background-position: 50%;
 	background-attachment: fixed;
 	color: #fff;
 	font-size: 2rem;
-	display: grid;
-	grid-template-rows: 100px auto 100px;
+
 	font-family: 'Merriweather Sans', sans-serif;
 }
 .container {
-	position: absolute;
-	top: 0;
-	right: 0;
-	left: 0;
-	bottom: 0;
+	height: 100%;
+	width: 100%;
+	display: grid;
+	grid-template-rows: 50px auto 200px;
 	background-color: rgba(0, 0, 0, 0.2);
 }
 
 header {
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
+	padding-right: 2rem;
+	justify-content: flex-end;
 }
 #prayer {
-	/* width: 50%;
-	-webkit-background-clip: text;
-
-	background-size: 100% 100%; */
-	/* filter: invert(100%); */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100px;
 }
 button {
 	color: #fff;
@@ -44,19 +41,32 @@ button {
 	padding: 5px;
 	background: transparent;
 }
+a {
+	color: #fff;
+	font-size: 24px;
+	font-weight: 700;
+	border: none;
+	padding: 5px;
+	background: transparent;
+	text-decoration: none;
+}
+a:visited {
+	color: #fff;
+}
 main {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	width: 100%;
-	height: 100%;
+	margin: auto 5rem;
 }
 #scripture {
-	width: 30%;
 	align-items: center;
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
+}
+#scripture-text {
+	font-size: 1.2em;
 }
 select {
 	border-radius: 10px;
@@ -64,4 +74,18 @@ select {
 	padding: 5px;
 	background-color: #fff;
 	opacity: 0.5;
+	margin-left: 1.5rem;
+}
+#place-name {
+	position: fixed;
+	bottom: 0;
+	font-size: 12px;
+}
+.first-letter-uppercase:first-letter {
+	text-transform: capitalize;
+}
+#username {
+	font-weight: 700;
+	font-size: 2em;
+	text-align: center;
 }

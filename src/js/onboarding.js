@@ -1,11 +1,9 @@
 const locationElement = document.getElementById('place-name')
-let error = document.getElementById('validate')
+// let error = document.getElementById('validate')
 
 let backgroundData
-const backendUrl = 'https://yvotd-backend.herokuapp.com/keys'
+const baseUrl = 'https://yvotd-backend.herokuapp.com'
 const unsplashUrl = 'https://api.unsplash.com/photos/random?orientation=landscape&query=nature landscape'
-
-let UNSPLASH_ACCESS_KEY
 
 window.addEventListener('DOMContentLoaded', () => {
 	function validateResponse(response) {
@@ -19,7 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	async function getBackgroundImage() {
 		const headers = new Headers()
 
-		const key = await fetch(backendUrl)
+		const key = await fetch(`${baseUrl}/keys`)
 		let keyjson = await validateResponse(key).json()
 
 		headers.append('Authorization', `Client-ID ${keyjson.unsplash}`)
@@ -96,14 +94,9 @@ nameInput.addEventListener('change', function (e) {
 })
 
 function next(from, to) {
-	error.innerHTML = ''
-
 	let value = document.getElementById(from).children[2].value
 
-	if (!value) {
-		error.innerHTML = 'Please enter a value'
-	} else {
-		error.innerHTML = ''
+	if (value) {
 		document.getElementById(from).classList.remove('is-visible')
 		document.getElementById(to).classList.add('is-visible')
 	}

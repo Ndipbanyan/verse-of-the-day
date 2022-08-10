@@ -1,14 +1,13 @@
 const verseElement = document.getElementById('verse')
 const versionElement = document.getElementById('versions')
-const prayerElement = document.getElementById('prayer')
+const prayerElement = document.querySelector('.prayer')
 const scriptureTextElement = document.getElementById('scripture-text')
 const locationElement = document.getElementById('place-name')
 let versions
 let backgroundData
 let scriptureData
-const verseUrl = 'https://yvotd-backend.herokuapp.com/'
+const baseUrl = 'https://yvotd-backend.herokuapp.com'
 const unsplashUrl = 'https://api.unsplash.com/photos/random?orientation=landscape&query=nature landscape'
-const backendUrl = 'https://yvotd-backend.herokuapp.com/keys'
 
 function validateResponse(response) {
 	if (!response.ok) {
@@ -21,7 +20,7 @@ function validateResponse(response) {
 async function getBackgroundImage() {
 	const headers = new Headers()
 
-	const key = await fetch(backendUrl)
+	const key = await fetch(`${baseUrl}/keys`)
 	let keyjson = await validateResponse(key).json()
 
 	headers.append('Authorization', `Client-ID ${keyjson.unsplash}`)
@@ -58,7 +57,7 @@ async function nextBackground() {
 			// The backgroundImage object is subsequently stored in
 			// the browser's local storage
 			document.body.setAttribute('style', `background-image: url(${backgroundImage.base64});`)
-			locationElement.textContent = backgroundImage.location.name
+			locationElement.textContent = backgroundImage.location.name ? backgroundImage.location.name : ''
 			let timeNow = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
 			timeNow = timeNow.split(',')
 			timeNow = timeNow[0]
@@ -74,7 +73,9 @@ window.addEventListener('DOMContentLoaded', () => {
 		if (value.isOnboardingDone) {
 			chrome.storage.local.get(['data'], (response) => {
 				const { data } = response
-				document.getElementById('username').innerHTML = `Hi ${data.username}`
+				const name = data.username
+
+				document.getElementById('username').innerHTML = `Hi ${name.charAt(0).toUpperCase()}${name.substring(1)}`
 			})
 		} else {
 			chrome.tabs.create({
@@ -95,16 +96,10 @@ window.addEventListener('DOMContentLoaded', () => {
 		if (background.timestamp == today) {
 			backgroundData = background
 			scriptureData = scripture
-			chrome.storage.local.get(['prayer'], (response) => {
-				prayerElement.innerHTML = response.prayer
-			})
 		} else {
-			chrome.runtime.sendMessage({ command: 'fetch-prayer' }, (response) => {
-				prayerElement.innerHTML = response.prayer
-			})
 			nextBackground()
-			const fetchVerse = fetch(`${verseUrl}verse`).then((res) => res.json())
-			const fetchVersions = fetch(`${verseUrl}scripture-text`).then((res) => res.json())
+			const fetchVerse = fetch(`${baseUrl}/verse`).then((res) => res.json())
+			const fetchVersions = fetch(`${baseUrl}/scripture-text`).then((res) => res.json())
 			Promise.all([fetchVerse, fetchVersions])
 
 				.then(function (data) {
@@ -124,12 +119,9 @@ window.addEventListener('DOMContentLoaded', () => {
 				})
 		}
 	} else {
-		chrome.runtime.sendMessage({ command: 'fetch-prayer' }, (response) => {
-			prayerElement.innerHTML = response.prayer ? response.prayer : 'Dear Abba, thank You'
-		})
 		nextBackground()
-		const fetchVerse = fetch(`${verseUrl}verse`).then((res) => res.json())
-		const fetchVersions = fetch(`${verseUrl}scripture-text`).then((res) => res.json())
+		const fetchVerse = fetch(`${baseUrl}/verse`).then((res) => res.json())
+		const fetchVersions = fetch(`${baseUrl}/scripture-text`).then((res) => res.json())
 		Promise.all([fetchVerse, fetchVersions])
 
 			.then(function (data) {
@@ -153,7 +145,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		scriptureTextElement.textContent = scriptureData.data[1].KJV
 		const { background } = backgroundData
 		document.body.setAttribute('style', `background-image: url(${background.base64});`)
-		locationElement.textContent = `${background.location.name}`
+		locationElement.innerHTML = background.location.name ? background.location.name : ''
 		versions = scriptureData.data[1]
 	}
 
@@ -161,4 +153,16 @@ window.addEventListener('DOMContentLoaded', () => {
 		const verse = event.target.value
 		scriptureTextElement.textContent = versions[verse]
 	})
+	chrome.storage.local.get(['prayer'], (response) => {
+		if (response.prayer) prayerElement.innerHTML = ` Prayer: ${response.prayer}`
+	})
 })
+// get prayer from supabase three times per day
+const d = new Date()
+let hour = d.getHours().toString()
+
+if (hour === '00' || hour === '8' || hour == '16') {
+	chrome.runtime.sendMessage({ command: 'fetch-prayer' }, (response) => {
+		prayerElement.innerHTML = ` Prayer: ${response.prayer}`
+	})
+}

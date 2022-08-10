@@ -45,6 +45,7 @@ form {
 	text-align: center;
 }
 footer {
+	font-size: 12px;
 	position: fixed;
 	bottom: 0;
 	background-color: transparent;
