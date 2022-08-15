@@ -1,5 +1,4 @@
 const locationElement = document.getElementById('place-name')
-// let error = document.getElementById('validate')
 
 let backgroundData
 const baseUrl = 'https://yvotd-backend.herokuapp.com'
@@ -85,20 +84,24 @@ const nameInput = document.getElementById('name')
 nameInput.addEventListener('keyup', function (e) {
 	if (e.key === 'Enter') {
 		e.preventDefault()
+
 		next('name', 'email')
 	}
 })
 nameInput.addEventListener('change', function (e) {
 	user_name = e.target.value
-	document.getElementById('email-label').textContent = `${user_name} What's your email?`
+	user_name = user_name.trim()
+	document.getElementById('email-label').textContent = `${user_name.charAt(0).toUpperCase()}${user_name.substring(
+		1
+	)} What's your email?`
 })
 
 function next(from, to) {
 	let value = document.getElementById(from).children[2].value
 
 	if (value) {
-		document.getElementById(from).classList.remove('is-visible')
 		document.getElementById(to).classList.add('is-visible')
+		document.getElementById(from).classList.remove('is-visible')
 	}
 }
 

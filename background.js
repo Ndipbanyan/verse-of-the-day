@@ -1,6 +1,6 @@
 const baseUrl = 'https://yvotd-backend.herokuapp.com'
-const PRAYER_URL = 'https://rwqmkjnxmzvukmdfgtiw.supabase.co/rest/v1/Prayers?select=prayer'
-const USERS_URL = 'https://rwqmkjnxmzvukmdfgtiw.supabase.co/rest/v1/Users'
+const PRAYER_URL = "https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer'"
+const USERS_URL = 'https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Users'
 
 chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
 	if (request.command === 'save-user-details') {

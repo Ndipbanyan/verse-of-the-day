@@ -3,6 +3,8 @@
 	box-sizing: border-box;
 }
 body {
+	height: 100vh;
+	width: 100vw;
 	padding: 0;
 	margin: 0;
 	background-color: #111;
@@ -31,7 +33,9 @@ header {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 100px;
+
+	text-align: center;
+	margin: 5rem;
 }
 button {
 	color: #fff;
@@ -88,4 +92,17 @@ select {
 	font-weight: 700;
 	font-size: 2em;
 	text-align: center;
+}
+@media (max-width: 768px) {
+	.container {
+		display: flex;
+		flex-direction: column;
+		height: fit-content;
+	}
+	main {
+		margin: auto 1rem;
+	}
+	#prayer {
+		margin: auto 1rem;
+	}
 }
