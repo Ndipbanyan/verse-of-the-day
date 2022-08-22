@@ -93,7 +93,8 @@ window.addEventListener('DOMContentLoaded', () => {
 		let today = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
 		today = today.split(',')
 		today = today[0]
-		if (background.timestamp == today) {
+
+		if (scripture.timestamp == today) {
 			backgroundData = background
 			scriptureData = scripture
 		} else {

@@ -49,12 +49,13 @@ chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
 	return true
 })
 
-// This happens when the extension is installed the first time
+// This happens when the extension is installed/uninstalled
 chrome.runtime.onInstalled.addListener((e) => {
 	if (e.reason === chrome.runtime.OnInstalledReason.INSTALL) {
 		chrome.storage.local.set({ isOnboardingDone: false })
 		chrome.tabs.create({
 			url: 'onboarding.html',
 		})
+		chrome.runtime.setUninstallURL('https://getverseoftheday.com/')
 	}
 })

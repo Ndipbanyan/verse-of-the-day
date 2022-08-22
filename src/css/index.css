@@ -7,7 +7,7 @@ body {
 	width: 100vw;
 	padding: 0;
 	margin: 0;
-	background-color: #111;
+	background-color: rgb(49, 64, 138);
 	background-size: cover;
 	background-position: 50%;
 	background-attachment: fixed;
@@ -29,6 +29,7 @@ header {
 	padding-right: 2rem;
 	justify-content: flex-end;
 }
+
 #prayer {
 	display: flex;
 	align-items: center;
@@ -46,16 +47,25 @@ button {
 	background: transparent;
 }
 a {
-	color: #fff;
+	color: rgb(202, 4, 166);
 	font-size: 24px;
 	font-weight: 700;
 	border: none;
 	padding: 5px;
 	background: transparent;
 	text-decoration: none;
+	background-color: #fff;
+	opacity: 0.5;
+	border-radius: 10px;
+	border: none;
+	padding: 10px;
+	margin-top: 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 a:visited {
-	color: #fff;
+	color: rgb(202, 4, 166);
 }
 main {
 	display: flex;
@@ -79,7 +89,13 @@ select {
 	background-color: #fff;
 	opacity: 0.5;
 	margin-left: 1.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+	cursor: pointer;
 }
+
 #place-name {
 	position: fixed;
 	bottom: 0;

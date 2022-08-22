@@ -8,7 +8,7 @@
 body {
 	height: 100vh;
 	width: 100vw;
-	background-color: #111;
+	background-color: rgb(49, 64, 138);
 	background-size: cover;
 	background-position: 50%;
 	background-attachment: fixed;
