@@ -1,5 +1,5 @@
 const baseUrl = 'https://yvotd-backend.herokuapp.com'
-const PRAYER_URL = "https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer'"
+const PRAYER_URL = 'https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer'
 const USERS_URL = 'https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Users'
 
 chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
@@ -27,7 +27,13 @@ chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
 				.catch((err) => console.log(err))
 		})
 	}
-	if (request.command === 'fetch-prayer') {
+
+	return true
+})
+
+// This happens when the extension is installed/uninstalled
+chrome.runtime.onInstalled.addListener((e) => {
+	if (e.reason === chrome.runtime.OnInstalledReason.INSTALL) {
 		fetch(`${baseUrl}/keys`)
 			.then((response) => response.json())
 			.then((response) => {
@@ -39,19 +45,11 @@ chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
 				})
 					.then((res) => res.json())
 					.then((res) => {
-						sendResponse({ prayer: res[0].prayer })
 						chrome.storage.local.set({ prayer: res[0].prayer })
 					})
 					.catch((err) => console.log(err))
 			})
 			.catch((err) => console.log(err))
-	}
-	return true
-})
-
-// This happens when the extension is installed/uninstalled
-chrome.runtime.onInstalled.addListener((e) => {
-	if (e.reason === chrome.runtime.OnInstalledReason.INSTALL) {
 		chrome.storage.local.set({ isOnboardingDone: false })
 		chrome.tabs.create({
 			url: 'onboarding.html',

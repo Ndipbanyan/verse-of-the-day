@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "verse of the day",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "This replaces a new tab on chrome with a verse of the day",
 	"action": {},
 

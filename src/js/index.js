@@ -7,6 +7,7 @@ let versions
 let backgroundData
 let scriptureData
 const baseUrl = 'https://yvotd-backend.herokuapp.com'
+const PRAYER_URL = 'https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer'
 const unsplashUrl = 'https://api.unsplash.com/photos/random?orientation=landscape&query=landscape'
 
 function validateResponse(response) {
@@ -58,7 +59,7 @@ async function nextBackground() {
 			// the browser's local storage
 			document.body.setAttribute('style', `background-image: url(${backgroundImage.base64});`)
 			locationElement.textContent = backgroundImage.location.name ? backgroundImage.location.name : ''
-			let timeNow = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
+			let timeNow = new Date().toLocaleString()
 			timeNow = timeNow.split(',')
 			timeNow = timeNow[0]
 			const storeData = { background: backgroundImage, timestamp: timeNow }
@@ -83,18 +84,23 @@ window.addEventListener('DOMContentLoaded', () => {
 			})
 		}
 	})
-
+	chrome.storage.local.get(['prayer'], (response) => {
+		if (response.prayer) {
+			prayerElement.innerHTML = `Prayer: ${response.prayer}`
+		}
+	})
 	const imageDataFromLS = localStorage.getItem('background')
 	const versesDataFromLS = localStorage.getItem('versions')
 
 	if (imageDataFromLS && versesDataFromLS) {
 		const background = JSON.parse(imageDataFromLS)
 		const scripture = JSON.parse(versesDataFromLS)
-		let today = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
+		let today = new Date().toLocaleString()
+
 		today = today.split(',')
 		today = today[0]
 
-		if (scripture.timestamp == today) {
+		if (scripture.timestamp === today) {
 			backgroundData = background
 			scriptureData = scripture
 		} else {
@@ -107,7 +113,7 @@ window.addEventListener('DOMContentLoaded', () => {
 					verseElement.textContent = data[0]
 					scriptureTextElement.textContent = data[1].KJV
 					versions = data[1]
-					let now = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
+					let now = new Date().toLocaleString()
 					now = now.split(',')
 					now = now[0]
 					const savetoLS = { data, timestamp: now }
@@ -129,7 +135,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				verseElement.textContent = data[0]
 				scriptureTextElement.textContent = data[1].KJV
 				versions = data[1]
-				let now = new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
+				let now = new Date().toLocaleString()
 				now = now.split(',')
 				now = now[0]
 				const savetoLS = { data, timestamp: now }
@@ -155,20 +161,31 @@ window.addEventListener('DOMContentLoaded', () => {
 		const verse = event.target.value
 		scriptureTextElement.textContent = versions[verse]
 	})
-	chrome.storage.local.get(['prayer'], (response) => {
-		if (response.prayer) prayerElement.innerHTML = `Prayer: ${response.prayer}`
-	})
 })
-// get prayer from supabase three times per day
+// get prayer from supabase every three hours
 const d = new Date()
 let hour = d.getHours().toString()
 let minutes = d.getMinutes().toString()
 let time = `${hour}:${minutes}`
 
-let timeToFetchPrayer = ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00']
+let timeToFetchPrayer = ['0:0', '3:0', '6:0', '9:0', '12:0', '15:0', '18:0', '21:0']
 
 if (timeToFetchPrayer.includes(time)) {
-	chrome.runtime.sendMessage({ command: 'fetch-prayer' }, (response) => {
-		prayerElement.innerHTML = ` Prayer: ${response.prayer}`
-	})
+	fetch(`${baseUrl}/keys`)
+		.then((response) => response.json())
+		.then((response) => {
+			fetch(`${PRAYER_URL}`, {
+				headers: {
+					apiKey: response.supabase,
+					Authorization: `Bearer ${response.supabase}`,
+				},
+			})
+				.then((res) => res.json())
+				.then((res) => {
+					prayerElement.innerHTML = ` Prayer: ${res[0].prayer}`
+					chrome.storage.local.set({ prayer: res[0].prayer })
+				})
+				.catch((err) => console.log(err))
+		})
+		.catch((err) => console.log(err))
 }
