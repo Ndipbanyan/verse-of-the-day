@@ -15,7 +15,7 @@
 		"newtab": "index.html"
 	},
 	"host_permissions": ["*://*/*"],
-	"permissions": ["storage", "unlimitedStorage", "tabs"],
+	"permissions": ["storage", "unlimitedStorage"],
 	"background": {
 		"service_worker": "background.js"
 	},
