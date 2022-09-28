@@ -163,18 +163,11 @@ window.addEventListener('DOMContentLoaded', () => {
 	})
 })
 // get prayer from supabase every three hours
-const d = new Date()
-let hour = d.getHours().toString()
-let minutes = d.getMinutes().toString()
-let time = `${hour}:${minutes}`
-
-let timeToFetchPrayer = ['0:0', '3:0', '6:0', '9:0', '12:0', '15:0', '18:0', '21:0']
-
-if (timeToFetchPrayer.includes(time)) {
-	fetch(`${baseUrl}/keys`)
+let fetchPrayerInterval = setInterval(() => {
+	fetch(`https://yvotd-backend.herokuapp.com/keys`)
 		.then((response) => response.json())
 		.then((response) => {
-			fetch(`${PRAYER_URL}`, {
+			fetch('https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer', {
 				headers: {
 					apiKey: response.supabase,
 					Authorization: `Bearer ${response.supabase}`,
@@ -182,10 +175,15 @@ if (timeToFetchPrayer.includes(time)) {
 			})
 				.then((res) => res.json())
 				.then((res) => {
-					prayerElement.innerHTML = ` Prayer: ${res[0].prayer}`
+					document.querySelector('.prayer').innerHTML = ` Prayer: ${res[0].prayer}`
+					console.log('prayer from timing', res)
 					chrome.storage.local.set({ prayer: res[0].prayer })
 				})
 				.catch((err) => console.log(err))
 		})
 		.catch((err) => console.log(err))
-}
+}, 180 * 60 * 1000)
+
+window.addEventListener('unload', function () {
+	this.clearInterval(fetchPrayerInterval)
+})
