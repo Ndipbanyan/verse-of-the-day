@@ -6,9 +6,32 @@ const locationElement = document.getElementById('place-name')
 let versions
 let backgroundData
 let scriptureData
+let prayerData
 const baseUrl = 'https://yvotd-backend.herokuapp.com'
 const PRAYER_URL = 'https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer'
 const unsplashUrl = 'https://api.unsplash.com/photos/random?orientation=landscape&query=landscape'
+
+const fetchVerse = (url) => {
+	const fetchVerse = fetch(`${url}/verse`).then((res) => res.json())
+	const fetchVersions = fetch(`${url}/scripture-text`).then((res) => res.json())
+	Promise.all([fetchVerse, fetchVersions])
+
+		.then(function (data) {
+			verseElement.textContent = data[0]
+			scriptureTextElement.textContent = data[1].KJV
+			versions = data[1]
+			let now = new Date().toLocaleString()
+			now = now.split(',')
+			now = now[0]
+			const savetoLS = { data, timestamp: now }
+
+			localStorage.setItem('versions', JSON.stringify(savetoLS))
+		})
+
+		.catch(function (error) {
+			console.log(error)
+		})
+}
 
 function validateResponse(response) {
 	if (!response.ok) {
@@ -69,6 +92,36 @@ async function nextBackground() {
 		console.log(err)
 	}
 }
+// get prayer from supabase
+let fetchPrayer = () => {
+	fetch(`https://yvotd-backend.herokuapp.com/keys`)
+		.then((response) => response.json())
+		.then((response) => {
+			fetch('https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer', {
+				headers: {
+					apiKey: response.supabase,
+					Authorization: `Bearer ${response.supabase}`,
+				},
+			})
+				.then((res) => res.json())
+				.then((res) => {
+					document.querySelector('.prayer').innerHTML = ` Prayer: ${res[0].prayer}`
+					let now = new Date().toLocaleString()
+					now = now.split(',')
+
+					// get the current hour
+					let d = new Date()
+					const h = d.getHours()
+
+					now = { day: now[0], hour: h }
+					const savetoLS = { prayer: res[0].prayer, timestamp: now }
+					localStorage.setItem('prayer', JSON.stringify(savetoLS))
+				})
+				.catch((err) => console.log(err))
+		})
+		.catch((err) => console.log(err))
+}
+
 window.addEventListener('DOMContentLoaded', () => {
 	chrome.storage.local.get(['isOnboardingDone'], (value) => {
 		if (value.isOnboardingDone) {
@@ -84,67 +137,59 @@ window.addEventListener('DOMContentLoaded', () => {
 			})
 		}
 	})
-	chrome.storage.local.get(['prayer'], (response) => {
-		if (response.prayer) {
-			prayerElement.innerHTML = `Prayer: ${response.prayer}`
-		}
-	})
+
 	const imageDataFromLS = localStorage.getItem('background')
 	const versesDataFromLS = localStorage.getItem('versions')
+	const prayerDataFromLS = localStorage.getItem('prayer')
 
+	// prayer Logic
+	if (prayerDataFromLS) {
+		const prayerInfoFromLS = JSON.parse(prayerDataFromLS)
+		let today = new Date().toLocaleString()
+
+		today = today.split(',')
+		today = today[0]
+		let d = new Date()
+		const h = d.getHours()
+
+		if (prayerInfoFromLS.timestamp['day'] === today) {
+			if (h - prayerInfoFromLS.timestamp['hour'] >= 4) {
+				fetchPrayer()
+				console.log('greater', today, h, prayerInfoFromLS.timestamp['day'], prayerInfoFromLS.timestamp['hour'])
+			} else {
+				prayerElement.textContent = ` Prayer: ${prayerInfoFromLS.prayer}`
+			}
+		} else {
+			fetchPrayer()
+		}
+	} else {
+		fetchPrayer()
+	}
+
+	// backgroundImage and verse logic
 	if (imageDataFromLS && versesDataFromLS) {
 		const background = JSON.parse(imageDataFromLS)
 		const scripture = JSON.parse(versesDataFromLS)
+		// get the current date
 		let today = new Date().toLocaleString()
 
 		today = today.split(',')
 		today = today[0]
 
-		if (scripture.timestamp === today) {
+		// get the current hour
+		let d = new Date()
+		const h = d.getHours()
+
+		if (scripture.timestamp === today && h >= 1) {
 			backgroundData = background
 			scriptureData = scripture
 		} else {
 			nextBackground()
-			const fetchVerse = fetch(`${baseUrl}/verse`).then((res) => res.json())
-			const fetchVersions = fetch(`${baseUrl}/scripture-text`).then((res) => res.json())
-			Promise.all([fetchVerse, fetchVersions])
-
-				.then(function (data) {
-					verseElement.textContent = data[0]
-					scriptureTextElement.textContent = data[1].KJV
-					versions = data[1]
-					let now = new Date().toLocaleString()
-					now = now.split(',')
-					now = now[0]
-					const savetoLS = { data, timestamp: now }
-
-					localStorage.setItem('versions', JSON.stringify(savetoLS))
-				})
-
-				.catch(function (error) {
-					console.log(error)
-				})
+			fetchVerse(baseUrl)
 		}
 	} else {
 		nextBackground()
-		const fetchVerse = fetch(`${baseUrl}/verse`).then((res) => res.json())
-		const fetchVersions = fetch(`${baseUrl}/scripture-text`).then((res) => res.json())
-		Promise.all([fetchVerse, fetchVersions])
-
-			.then(function (data) {
-				verseElement.textContent = data[0]
-				scriptureTextElement.textContent = data[1].KJV
-				versions = data[1]
-				let now = new Date().toLocaleString()
-				now = now.split(',')
-				now = now[0]
-				const savetoLS = { data, timestamp: now }
-				localStorage.setItem('versions', JSON.stringify(savetoLS))
-			})
-
-			.catch(function (error) {
-				console.log(error)
-			})
+		fetchVerse(baseUrl)
 	}
 
 	if (scriptureData && backgroundData) {
@@ -161,29 +206,4 @@ window.addEventListener('DOMContentLoaded', () => {
 		const verse = event.target.value
 		scriptureTextElement.textContent = versions[verse]
 	})
-})
-// get prayer from supabase every three hours
-let fetchPrayerInterval = setInterval(() => {
-	fetch(`https://yvotd-backend.herokuapp.com/keys`)
-		.then((response) => response.json())
-		.then((response) => {
-			fetch('https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer', {
-				headers: {
-					apiKey: response.supabase,
-					Authorization: `Bearer ${response.supabase}`,
-				},
-			})
-				.then((res) => res.json())
-				.then((res) => {
-					document.querySelector('.prayer').innerHTML = ` Prayer: ${res[0].prayer}`
-					console.log('prayer from timing', res)
-					chrome.storage.local.set({ prayer: res[0].prayer })
-				})
-				.catch((err) => console.log(err))
-		})
-		.catch((err) => console.log(err))
-}, 180 * 60 * 1000)
-
-window.addEventListener('unload', function () {
-	this.clearInterval(fetchPrayerInterval)
 })
