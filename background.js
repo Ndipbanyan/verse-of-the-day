@@ -31,6 +31,12 @@ chrome.runtime.onMessage.addListener(function (request, _sender, sendResponse) {
 	return true
 })
 
+// auto install the app if there are new updates
+chrome.runtime.onUpdateAvailable.addListener(function (details) {
+	console.log('updating to version ' + details.version)
+	chrome.runtime.reload()
+})
+
 // This happens when the extension is installed/uninstalled
 chrome.runtime.onInstalled.addListener((e) => {
 	if (e.reason === chrome.runtime.OnInstalledReason.INSTALL) {
