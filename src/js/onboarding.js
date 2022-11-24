@@ -1,7 +1,7 @@
 const locationElement = document.getElementById('place-name')
 
 let backgroundData
-const baseUrl = 'https://yvotd-backend.herokuapp.com'
+const baseUrl = 'https://yvotd-backend.fly.dev'
 const unsplashUrl = 'https://api.unsplash.com/photos/random?orientation=landscape&query=nature landscape'
 
 window.addEventListener('DOMContentLoaded', () => {

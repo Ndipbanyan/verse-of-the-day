@@ -1,5 +1,5 @@
 * {
-	font-family: 'Merriweather';
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	box-sizing: border-box;
 }
 body {
@@ -14,7 +14,7 @@ body {
 	color: #fff;
 	font-size: 2rem;
 
-	font-family: 'Merriweather Sans', sans-serif;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .container {
 	height: 100%;
@@ -27,7 +27,7 @@ body {
 header {
 	display: flex;
 	padding-right: 2rem;
-	justify-content: flex-end;
+	justify-content: center;
 }
 
 #prayer {
@@ -37,22 +37,22 @@ header {
 }
 button {
 	color: #fff;
-	font-size: 24px;
+	font-size: 16px;
 	font-weight: 700;
 	border: none;
 	padding: 5px;
-	background: transparent;
+	background: rgb(33, 32, 32);
 }
 a {
-	color: rgb(202, 4, 166);
-	font-size: 24px;
+	color: #fff;
+	font-size: 16px;
 	font-weight: 700;
 	border: none;
 	padding: 5px;
-	background: transparent;
+
 	text-decoration: none;
-	background-color: #fff;
-	opacity: 0.5;
+	background-color: #000;
+	opacity: 0.8;
 	border-radius: 10px;
 	border: none;
 	padding: 10px;
@@ -62,7 +62,7 @@ a {
 	justify-content: center;
 }
 a:visited {
-	color: rgb(202, 4, 166);
+	color: #fff;
 }
 main {
 	display: flex;

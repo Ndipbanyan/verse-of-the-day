@@ -7,7 +7,7 @@ let versions
 let backgroundData
 let scriptureData
 let prayerData
-const baseUrl = 'https://yvotd-backend.herokuapp.com'
+const baseUrl = 'https://yvotd-backend.fly.dev'
 const PRAYER_URL = 'https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer'
 const unsplashUrl = 'https://api.unsplash.com/photos/random?orientation=landscape&query=landscape'
 
@@ -94,7 +94,7 @@ async function nextBackground() {
 }
 // get prayer from supabase
 let fetchPrayer = () => {
-	fetch(`https://yvotd-backend.herokuapp.com/keys`)
+	fetch(`https://yvotd-backend.fly.dev/keys`)
 		.then((response) => response.json())
 		.then((response) => {
 			fetch('https://trvhmnsvxucecbejzgbo.supabase.co/rest/v1/Prayers?select=prayer', {
@@ -180,7 +180,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		let d = new Date()
 		const h = d.getHours()
 
-		if (scripture.timestamp === today && h >= 1) {
+		if (scripture.timestamp === today) {
 			backgroundData = background
 			scriptureData = scripture
 		} else {
